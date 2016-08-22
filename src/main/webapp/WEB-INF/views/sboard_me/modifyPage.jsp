@@ -3,7 +3,6 @@
 
 <html>
 <head>
-<title>modifyPage.jsp</title>
 <style>
 .fileDrop {
 	width: 80%;
@@ -13,8 +12,12 @@
 	margin: auto;
 }
 </style>
+<title>modifyPage.jsp</title>
 </head>
 <body>
+
+
+
 
 	<div class="row">
 		<!-- left column -->
@@ -251,6 +254,6 @@
 
 	</div>
 	<!-- /.row -->
-
+	<!-- /.content -->
 </body>
 </html>

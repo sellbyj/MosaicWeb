@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page session="false"%>
+
 <html>
 <head>
 <title>list.jsp</title>
@@ -11,6 +12,7 @@
 
 	<div class="row">
 		<!-- left column -->
+
 
 		<div class="col-md-12">
 			<!-- general form elements -->
@@ -122,6 +124,8 @@
 
 	</div>
 	<!-- /.row -->
+	<!-- /.content -->
+
 
 	<script>
 		var result = '${msg}';
@@ -157,6 +161,7 @@
 
 				});
 	</script>
+
 
 </body>
 </html>
