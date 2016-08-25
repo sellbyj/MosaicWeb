@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,12 +24,20 @@ import org.zerock.service.ReplyService;
 @RequestMapping("/replies")
 public class ReplyController {
 
+	
+  static Logger logger = LoggerFactory.getLogger(ReplyController.class);
+  
+  
   @Inject
   private ReplyService service;
 
   @RequestMapping(value = "", method = RequestMethod.POST)
-  public ResponseEntity<String> register(@RequestBody ReplyVO vo) {
+  public ResponseEntity<String> register(@RequestBody ReplyVO vo) { //UnMarshell
 
+		logger.info("#############");
+		logger.info(vo.toString());
+		logger.info("#############");
+	
     ResponseEntity<String> entity = null;
     try {
       service.addReply(vo);

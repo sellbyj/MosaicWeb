@@ -19,4 +19,5 @@ public interface ReplyService {
       throws Exception;
 
   public int count(Integer bno) throws Exception;
+
 }
