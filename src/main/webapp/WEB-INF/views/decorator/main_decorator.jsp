@@ -456,12 +456,14 @@
 		</aside>
 
 		<!-- Content Wrapper. Contains page content -->
-		<div class="content-wrapper" style="border: 2px solid blue;">
-			<section class="content" style="border: 2px solid red;">
+		<div class="content-wrapper " style="border: 2px solid blue;">
+			<section class="content"  style="border: 2px solid red;">
 				<!-- ################## -->
 				<!-- START Main Content -->
 				<!-- ################## -->
+				<div class="container-fluid">
 				<sitemesh:write property="body" />
+				</div>
 				<!-- ################## -->
 				<!-- END   Main Content -->
 				<!-- ################## -->

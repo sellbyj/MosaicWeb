@@ -4,14 +4,21 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>sstudy_ex01</title>
+<title>modifyReply.jsp</title>
+<!-- jQuery 2.1.4 -->
+<script src="/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.4 -->
 <link href="/resources/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css" />
+	
 <script src="/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
-	<!-- Bootstrap 3.3.2 JS -->
-	<script src="/resources/bootstrap/js/bootstrap.min.js"
+<!-- Bootstrap 3.3.2 JS -->
+
+<script src="/resources/bootstrap/js/bootstrap.min.js"
 		type="text/javascript"></script>
 </head>
 <body>
@@ -27,7 +34,7 @@
 			</div>
 			<br>
 			<div class="form-group">
-				<label for="replytext">replyer : </label> 
+				<label for="replyer">replyer : </label> 
 				<input class="form-control" type="text" id="replyer" value="USER01" />
 			</div>
 			<button id="addReply" class="btn btn-primary">add Reply</button>
@@ -53,22 +60,28 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
+				<span class="close" data-dismiss="modal">&times;</span>
 				<h2 class="modal-title">댓글 수정 & 삭제</h2>
 			</div>		
 			<div class="modal-body">
-				<h3 ></h3>
+				<input id="replyprompt" class="form-control"/>
 			</div>		
 			<div class="modal-footer">
+				<div class="btn-group">
+					<button id="modify" class="btn btn-primary">수정</button>
+					<button id="delete" class="btn btn-warning">삭제</button>
+					<button class="btn btn-danger" data-dismiss="modal">취소</button>
+				</div>
 			</div>		
 		</div>
 	</div>
 </div>
 <script id="mytemplate"  type="text/x-handlebars-template">
-	<ul class= "  list-group">
+	<ul class= "list-group">
 		{{#each .}}
 		<li class="list-group-item">
 			[{{rno}}] {{replyer}}<i class="fa fa-backward fa-spin"></i>{{replytext}}
-			<button class="btn btn-info mod" date-rno="{{rno}}" 
+			<button class="btn btn-danger mod" date-rno="{{rno}}" 
 										     data-bno="{{bno}}"
 										     data-replytext="{{replytext}}" 
 											 data-toggle="modal"
@@ -96,9 +109,12 @@
 		var str =template(list);
 		$('#reply .panel-body').html(str);
 		$('.mod').on('click' ,function() {
-			var str = "rno=" + $(this).attr("data-rno");
-				str +="bno=" + $(this).attr("data-bno");
-				str +="replytext=" + $(this).attr("data-replytext");
+			var rno = $(this).attr("data-rno");
+			var replytext= $(this).attr("data-replytext");
+			$('#replyprompt').val(replytext).attr('data-rno' , rno);
+						
+// 			str +="replytext=" + $(this).attr("data-replytext");
+// 				str +="bno=" + $(this).attr("data-bno");
 // 			alert(str);
 // 			if(confirm(str))
 // 				alert("확인 클릭");
@@ -126,24 +142,32 @@
 			
 			str +='<li><a href="#">' + (pageMaker.startPage-1) + "prev</a></li>";
 		}
-		for(var i =pageMaker.startPage; i<=10;i++){
-// 		for(var i =pageMaker.startPage; i<=pageMaker.endPage;i++){
-		str +='<li><a href="#">' + i + "</a></li>";
+// 		for(var i =pageMaker.startPage; i<=10;i++){
+		for(var i =pageMaker.startPage; i<=pageMaker.endPage;i++){
+		str +='<li><a href="#" data-num="'+ i +'" >' + i + "</a></li>";
 		}
 		
 		
 		
 		pageMaker.next = true;		
-		
-		
 		if(pageMaker.next){
 				
-			str +='<li><a href="#">' + (pageMaker.ednPage-1) + "next</a></li>";
+			str +='<li><a href="#">' + (pageMaker.ednPage + 1) + "next</a></li>";
 			
 		}
 		
 		
 		$('#reply .panel-footer .pagination').html(str);
+		
+		$('.pagination li > a').on('click' , function(evnet) {
+			event.preventDefault();
+			var num = $(this).html('data-num');
+			alert("num=" + num);
+			
+			page= num;
+			getPage(page);
+			
+		});
 		
 	}
 	
@@ -203,6 +227,67 @@
 		});
 		
 	
+		$('#myModal #modify').on('click', function() {
+// 			alert("modify");	
+			
+			var rno = $('#replyprompt').attr('data-rno');
+			var replytext = $('#replyprompt').val();
+			console.log("rno=" + rno + ", replytext="  + replytext); 
+			
+			$.ajax({
+				type : "PUT",
+				url: "/replies/" + rno ,
+				headers: {
+					"Content-Type" :"application/json"
+					
+				},
+				processDate : false,
+				data: JSON.stringify({
+					replytext : replytext
+				
+				}),
+				success : function(result) {
+					if(result == "SUCCESS")
+						getPage(page);
+					
+					alert(result);
+				}
+				
+			});
+		
+			$('#myModal').modal('hide');
+		});
+		$('#myModal #delete').on('click', function() {
+// 			alert("delete");	
+			var rno = $('#replyprompt').attr('data-rno');
+			console.log("rno = " + rno); 
+			$.ajax({
+			type : "DELETE",
+			url: "/replies/" + rno ,
+			headers: {
+				"Content-Type" :"application/json"
+				
+			},
+			processDate : false,
+			data: JSON.stringify({
+				replytext : replytext
+			
+			}),
+			success : function(result) {
+				if(result == "SUCCESS")
+					getPage(page);
+				
+				alert(result);
+			}
+			
+		});
+
+			$('#myModal').modal('hide');
+		});
+		
+		
+		
+		
 </script>
 
 </body>
